@@ -29,6 +29,10 @@ RSpec.describe UserReward, type: :model do
         name: 'Free Movie Tickets',
         per_first_days_transactions: 60, 
         points_needed: 1000
+      },
+      { # Give 4x Airport Lounge Access Reward when a user becomes a gold tier customer
+        name: '4x Airport Lounge Access',
+        per_gold_tier: true, 
       }
     ]
     
@@ -69,6 +73,13 @@ RSpec.describe UserReward, type: :model do
       CashTransaction.create!(cash_transaction)
 
       expect(user.user_rewards.last.reward.name).to eq('Free Movie Tickets')
+    end
+
+    it 'Give 4x Airport Lounge Access Reward when a user becomes a gold tier customer' do
+      cash_transaction[:amount] = 11000
+      transaction = CashTransaction.create!(cash_transaction)
+
+      expect(user.user_rewards.last.reward.name).to eq('4x Airport Lounge Access')
     end
   end
 end

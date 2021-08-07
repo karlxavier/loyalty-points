@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_05_131048) do
+ActiveRecord::Schema.define(version: 2021_08_07_143214) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 2021_08_05_131048) do
     t.integer "per_monthly_accumulation"
     t.boolean "per_birthmonth", default: false
     t.integer "per_first_days_transactions"
+    t.boolean "per_gold_tier", default: false
   end
 
   create_table "user_rewards", force: :cascade do |t|

@@ -23,6 +23,7 @@ class RewardsService
 
   def rewarded?(reward)
     return true if @user.birthmonth? if reward.per_birthmonth?
+    return true if @user.gold? if reward.per_gold_tier?
     return true if monthly_points_accumulation?(reward)
     return true if per_transaction_points?(reward)
     return true if per_first_days_transactions?(reward)
