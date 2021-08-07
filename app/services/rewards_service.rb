@@ -22,10 +22,10 @@ class RewardsService
   private
 
   def rewarded?(reward)
-    return @user.birthmonth? if reward.per_birthmonth?
-    return monthly_points_accumulation?(reward)
-    return per_transaction_points?(reward)
-    return per_first_days_transactions?(reward)
+    return true if @user.birthmonth? if reward.per_birthmonth?
+    return true if monthly_points_accumulation?(reward)
+    return true if per_transaction_points?(reward)
+    return true if per_first_days_transactions?(reward)
     return false
   end
 
@@ -38,7 +38,7 @@ class RewardsService
   end
 
   def monthly_points_accumulation?(reward)
-    return false if reward.points_needed.blank?
+    return false if reward.points_needed.blank? || reward.per_monthly_accumulation.blank?
     from_date = DateTime.now - reward.per_monthly_accumulation.months
     accumulated_points = @user.points_accumulation(from_date, DateTime.now)
     accumulated_points >= reward.points_needed
@@ -49,11 +49,11 @@ class RewardsService
     trans = active_transactions.where(cash_transactions: { amount: reward.points_needed..Float::INFINITY })
     return false unless trans.count >= reward.per_transaction
     trans.update_all(converted: true)
-    return true
+    true
   end
 
   def per_first_days_transactions?(reward)
-    return false if reward.per_first_days_transactions.blank?
+    return false if reward.points_needed.blank? || reward.per_first_days_transactions.blank?
     trans = active_transactions.order(:id).limit(reward.per_first_days_transactions)
     trans.sum("cash_transactions.amount") >= reward.points_needed
   end

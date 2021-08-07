@@ -44,10 +44,10 @@ ActiveRecord::Schema.define(version: 2021_08_05_131048) do
     t.integer "points_needed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "per_transaction", default: 0
-    t.integer "per_monthly_accumulation", default: 0
+    t.integer "per_transaction"
+    t.integer "per_monthly_accumulation"
     t.boolean "per_birthmonth", default: false
-    t.integer "per_first_days_transactions", default: 0
+    t.integer "per_first_days_transactions"
   end
 
   create_table "user_rewards", force: :cascade do |t|
