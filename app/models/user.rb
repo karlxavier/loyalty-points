@@ -14,7 +14,7 @@ class User < ApplicationRecord
 
   validates_presence_of :birthdate
 
-  before_save :tier_upgrade?
+  # after_commit :tier_upgrade?, on: :create
 
   scope :points_accumulation, -> (user_id, from, to) {
     joins(:points).where(
@@ -34,13 +34,14 @@ class User < ApplicationRecord
     self.points.where( created_at: from..to ).sum("points.value")
   end
 
-  private
-
-  def tier_upgrade?
-    return unless balance_points_changed?
-    LOYALTY_TIERS.values.reverse.each do |point|
-      tier = LOYALTY_TIERS.key(point) if balance_points >= point
-    end
+  def check_tier_upgrade
+      User::LOYALTY_TIERS.values.reverse.each do |point|
+        if (self.balance_points.presence || 0) >= point
+          self.tier = User::LOYALTY_TIERS.key(point)
+          self.save
+          break
+        end
+      end
   end
 
 end

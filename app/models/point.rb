@@ -13,7 +13,7 @@ class Point < ApplicationRecord
   private
 
   def update_user_balance
-    service = "PointsService::#{account_type.camelize}".constantize.new(user: user, point: self)
+    service = "PointsService::#{account_type.camelize}".constantize.new(user: user, point: Point.find(id))
     service.update!
   end
 
